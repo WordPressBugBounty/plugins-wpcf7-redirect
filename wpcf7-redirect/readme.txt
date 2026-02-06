@@ -2,8 +2,8 @@
 Tags: cf7 redirect, redirect cf7, contact form 7 MailChimp, redirect to URL, contact form 7 paypal
 Contributors: codeinwp, themeisle, yuvalsabar, regevlio
 Requires at least: 5.2.0
-Tested up to: 6.8
-Stable tag: 3.2.6
+Tested up to: 6.9
+Stable tag: 3.2.8
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -19,7 +19,7 @@ Want more power? Our PRO version includes JavaScript execution after submission,
 
 - Need any help with setup? [CHECK DOCUMENTATION](https://docs.themeisle.com/collection/2014-redirection-for-contact-form-7)
 
-- Interested in Redirection For CF7 Pro? [LEARN MORE](https://themeisle.com/plugins/wpcf7-redirect/upgrade/?utm_source=wpadmin&utm_medium=wpcf-7readme&utm_campaign=pro-cta)
+- Interested in Redirection For CF7 Pro? [LEARN MORE](https://themeisle.com/plugins/wpcf7-redirect/upgrade/?utm_source=wordpressorg&utm_medium=wpcf-7readme&utm_campaign=pro-cta)
 
 == USAGE ==
 
@@ -67,9 +67,9 @@ Simply go to your form settings, select the "Action" tab, and add additional Sub
 
 - **SMS with Twilio Integration:** Add the ability to send SMS messages to your users or notifications to yourself using Twilio.
 
-Unlock these premium features and more with **[Redirection for CF7 PRO](https://themeisle.com/plugins/wpcf7-redirect/upgrade/?utm_source=wpadmin&utm_medium=wpcf-7readme&utm_campaign=unlock-pro-cta)!**
+Unlock these premium features and more with **[Redirection for CF7 PRO](https://themeisle.com/plugins/wpcf7-redirect/upgrade/?utm_source=wordpressorg&utm_medium=wpcf-7readme&utm_campaign=unlock-pro-cta)!**
 
-**Still have questions?** Ask your pre-sales questions **[here](https://themeisle.com/contact/?utm_source=wpadmin&utm_medium=wpcf-7readme&utm_campaign=pre-sales)**, and we will get back to you promptly. Or, purchase with confidence and try it for yourself—we offer a **30-day no-questions-asked 100% money-back guarantee**.
+**Still have questions?** Ask your pre-sales questions **[here](https://themeisle.com/contact/?utm_source=wordpressorg&utm_medium=wpcf-7readme&utm_campaign=pre-sales)**, and we will get back to you promptly. Or, purchase with confidence and try it for yourself—we offer a **30-day no-questions-asked 100% money-back guarantee**.
 
 == 🤔 WHAT YOU CAN DO WITH REDIRECTION FOR CF7: ==
 
@@ -152,6 +152,21 @@ No. One of the reasons we developed this plugin, is because on_send_ok is now de
 5. Save Entries Action
 
 == Changelog ==
+
+#####   Version 3.2.8 (2025-12-19)
+
+- Enhanced security
+
+
+
+
+#####   Version 3.2.7 (2025-10-15)
+
+- Updated dependencies
+- Enhanced security
+
+
+
 
 #####   Version 3.2.6 (2025-09-11)
 
