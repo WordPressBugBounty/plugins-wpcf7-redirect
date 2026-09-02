@@ -94,20 +94,44 @@ class WPCF7R_Save_File {
 		global $wp_filesystem;
 		$this->filesystem_init();
 
-		foreach ( $files_meta as $file_key => $file_data ) {
-			if ( empty( $file_data['path'] ) || ! $wp_filesystem->exists( $file_data['path'] ) ) {
-				continue;
-			}
+		foreach ( $files_meta as $file_data ) {
+			foreach ( self::get_stored_paths( $file_data ) as $stored_path ) {
+				$file_name = sanitize_file_name( basename( $stored_path ) );
+				$file_path = path_join( $normalized_uploads, $file_name );
 
-			$file_name = sanitize_file_name( basename( $file_data['path'] ) );
-			$file_path = path_join( $normalized_uploads, $file_name );
-
-			if (
-				$wp_filesystem->exists( $file_path )
-			) {
-				$wp_filesystem->delete( $file_path );
+				if ( $wp_filesystem->exists( $file_path ) ) {
+					$wp_filesystem->delete( $file_path );
+				}
 			}
 		}
+	}
+
+	/**
+	 * Read the stored path(s) of a single `files` meta entry.
+	 *
+	 * Entries saved by older versions — and multi-file upload fields — store
+	 * `path` as an array of paths instead of a string, so every reader has to
+	 * accept both shapes. Malformed entries yield no paths rather than a
+	 * TypeError from the filesystem functions downstream.
+	 *
+	 * @param mixed $file_data A single entry of the `files` post meta.
+	 * @return string[] Stored paths, empty when the entry holds none.
+	 */
+	private static function get_stored_paths( $file_data ) {
+		$paths = is_array( $file_data ) && isset( $file_data['path'] ) ? $file_data['path'] : array();
+
+		if ( ! is_array( $paths ) ) {
+			$paths = array( $paths );
+		}
+
+		return array_values(
+			array_filter(
+				$paths,
+				static function ( $path ) {
+					return is_string( $path ) && '' !== $path;
+				}
+			)
+		);
 	}
 
 	/**
@@ -126,18 +150,16 @@ class WPCF7R_Save_File {
 			return new WP_Error( 'entry_meta_not_found', __( 'File information not found', 'wpcf7-redirect' ), array( 'status' => 404 ) );
 		}
 
-		$file_path = false;
+		$stored_paths = isset( $files_post_meta[ $file_key ] ) ? self::get_stored_paths( $files_post_meta[ $file_key ] ) : array();
 
-		if (
-			! empty( $files_post_meta[ $file_key ] ) &&
-			! empty( $files_post_meta[ $file_key ]['path'] )
-		) {
-			$file_path = $files_post_meta[ $file_key ]['path'];
-		}
-
-		if ( empty( $file_path ) ) {
+		if ( ! $stored_paths ) {
 			return new WP_Error( 'file_not_found_in_entry', __( 'File path not found', 'wpcf7-redirect' ), array( 'status' => 404 ) );
 		}
+
+		// A multi-file field serves its first file, which is the only one the
+		// Save Entry action keeps. Add a file_index request arg if the rest
+		// ever need to be reachable.
+		$file_path = $stored_paths[0];
 
 		$upload_dir = $this->get_uploads_dir();
 

@@ -78,6 +78,13 @@ class WPCF7R_Action {
 	private $action;
 
 	/**
+	 * Hold the shortcode escape token of every masking pass currently running, innermost last.
+	 *
+	 * @var string[]
+	 */
+	private static $shortcode_escape_tokens = array();
+
+	/**
 	 * Hold the action status.
 	 *
 	 * @var string|bool
@@ -487,8 +494,15 @@ class WPCF7R_Action {
 			)
 		);
 
+		$token = self::mask_submitted_brackets();
+
 		$replaced_tags = wpcf7_mail_replace_tags( $content, $args );
+
+		self::unhook_submitted_brackets_mask();
+
 		$replaced_tags = do_shortcode( $replaced_tags );
+		$replaced_tags = self::unmask_submitted_brackets( $replaced_tags, $token );
+
 		$replaced_tags = $this->replace_lead_id_tag( $replaced_tags );
 
 		$files = $this->get_files_shortcodes_from_submitted_data();
@@ -502,6 +516,88 @@ class WPCF7R_Action {
 		}
 
 		return $replaced_tags;
+	}
+
+	/**
+	 * Start hiding the brackets that Contact Form 7 pulls out of the submitted data.
+	 *
+	 * Everything mail tag replacement substitutes is masked, so a later do_shortcode() pass only
+	 * sees the shortcodes authored in the action settings. The caller must unmask with the returned
+	 * token once every shortcode pass over that content is done.
+	 *
+	 * @return string The token the masked content has to be unmasked with.
+	 */
+	public static function mask_submitted_brackets() {
+		$token = uniqid( 'wpcf7r', true );
+
+		self::$shortcode_escape_tokens[] = $token;
+
+		add_filter( 'wpcf7_mail_tag_replaced', array( __CLASS__, 'escape_submitted_brackets' ), PHP_INT_MAX );
+		add_filter( 'wpcf7_special_mail_tags', array( __CLASS__, 'escape_submitted_brackets' ), PHP_INT_MAX );
+
+		return $token;
+	}
+
+	/**
+	 * Stop masking replaced mail tags, leaving the content masked until it is unmasked by token.
+	 *
+	 * @return void
+	 */
+	public static function unhook_submitted_brackets_mask() {
+		array_pop( self::$shortcode_escape_tokens );
+
+		// An enclosing pass is still replacing mail tags, so the filters have to stay hooked.
+		if ( self::$shortcode_escape_tokens ) {
+			return;
+		}
+
+		remove_filter( 'wpcf7_mail_tag_replaced', array( __CLASS__, 'escape_submitted_brackets' ), PHP_INT_MAX );
+		remove_filter( 'wpcf7_special_mail_tags', array( __CLASS__, 'escape_submitted_brackets' ), PHP_INT_MAX );
+	}
+
+	/**
+	 * Hide the brackets of a replaced mail tag, so submitted data cannot form a shortcode.
+	 *
+	 * Hooked on 'wpcf7_mail_tag_replaced' and 'wpcf7_special_mail_tags' only while
+	 * wpcf7_mail_replace_tags() runs. Non-string values (a tag that did not resolve) pass through
+	 * untouched, keeping Contact Form 7's own fallback handling intact.
+	 *
+	 * @param mixed $replaced The replaced mail tag value.
+	 * @return mixed The value with its brackets masked.
+	 */
+	public static function escape_submitted_brackets( $replaced ) {
+		if ( ! is_string( $replaced ) || ! self::$shortcode_escape_tokens ) {
+			return $replaced;
+		}
+
+		$token = end( self::$shortcode_escape_tokens );
+
+		return str_replace(
+			array( '[', ']' ),
+			array( '{' . $token . '-open}', '{' . $token . '-close}' ),
+			$replaced
+		);
+	}
+
+	/**
+	 * Restore the brackets masked by escape_submitted_brackets().
+	 *
+	 * Call this only once no further shortcode pass will run over the content.
+	 *
+	 * @param mixed  $content The content to restore the brackets in.
+	 * @param string $token   The token returned by mask_submitted_brackets().
+	 * @return mixed The content with its original brackets.
+	 */
+	public static function unmask_submitted_brackets( $content, $token ) {
+		if ( ! is_string( $content ) || '' === $token ) {
+			return $content;
+		}
+
+		return str_replace(
+			array( '{' . $token . '-open}', '{' . $token . '-close}' ),
+			array( '[', ']' ),
+			$content
+		);
 	}
 
 	/**

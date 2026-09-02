@@ -249,11 +249,12 @@ class Ext_Accessibe extends WPCF7R_Action {
 	/**
 	 * General function to retrieve meta
 	 *
-	 * @param string $key The meta key to retrieve.
-	 * @return string The meta value or empty string.
+	 * @param string $key              The meta key to retrieve.
+	 * @param string $predefined_value Fallback value when the key is not set.
+	 * @return string The meta value or the fallback.
 	 */
-	public function get( $key ) {
-		return isset( $this->accesibe_widget_options[ $key ] ) ? $this->accesibe_widget_options[ $key ] : '';
+	public function get( $key, $predefined_value = '' ) {
+		return isset( $this->accesibe_widget_options[ $key ] ) ? $this->accesibe_widget_options[ $key ] : $predefined_value;
 	}
 
 	/**

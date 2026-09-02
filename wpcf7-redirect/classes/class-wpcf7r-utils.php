@@ -735,7 +735,7 @@ class WPCF7r_Utils {
 	 * @return string The UTF-8 encoded string.
 	 */
 	public static function func_utf8_encode( $value ) {
-		return apply_filters( 'func_utf8_encode', utf8_encode( $value ), $value );
+		return apply_filters( 'func_utf8_encode', mb_convert_encoding( (string) $value, 'UTF-8', 'ISO-8859-1' ), $value );
 	}
 
 	/**
