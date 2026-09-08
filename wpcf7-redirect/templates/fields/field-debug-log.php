@@ -21,7 +21,7 @@ defined( 'ABSPATH' ) || exit;
 				$debug_field_value = maybe_unserialize( $debug_field_value );
 
 				if ( is_array( $debug_field_value ) || is_object( $debug_field_value ) ) {
-					print_r( $debug_field_value );
+					echo esc_html( print_r( $debug_field_value, true ) );
 				} else {
 					echo esc_attr( $debug_field_value );
 				}

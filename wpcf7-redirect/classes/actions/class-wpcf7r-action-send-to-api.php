@@ -110,9 +110,13 @@ class WPCF7R_Action_Send_To_Api extends WPCF7R_Action {
 		$submited_data = $submission->get_posted_data();
 
 		if ( 'xml' === $type || 'json' === $type ) {
+			$token = self::mask_submitted_brackets();
+
 			$template = $this->replace_lead_id_tag( $template );
 
 			foreach ( $tags_map as $form_key => $qs_cf7_form_key ) {
+				$from_submitted_data = true;
+
 				if ( is_array( $qs_cf7_form_key ) ) {
 
 					// Arrange checkbox arrays.
@@ -134,6 +138,8 @@ class WPCF7R_Action_Send_To_Api extends WPCF7R_Action {
 
 				if ( ! $value ) {
 					if ( isset( $this->defaults[ $form_key ] ) ) {
+						$from_submitted_data = false;
+
 						if ( is_array( $this->defaults[ $form_key ] ) ) {
 							$value = array();
 
@@ -165,20 +171,30 @@ class WPCF7R_Action_Send_To_Api extends WPCF7R_Action {
 					}
 				}
 
-				$value    = trim( preg_replace( '/(\r\n)|\n|\r/', '\\n', $value ) );
+				$value = trim( preg_replace( '/(\r\n)|\n|\r/', '\\n', $value ) );
+
+				if ( $from_submitted_data ) {
+					$value = self::escape_submitted_brackets( $value );
+				}
+
 				$template = str_replace( "[{$form_key}]", $value, $template );
 			}
 
-			// Replace special mail tags.
+			// Replace special mail tags. Request derived ones such as [_url] and [_user_agent] are
+			// masked by the filter mask_submitted_brackets() hooked on 'wpcf7_special_mail_tags'.
 
 			foreach ( WPCF7R_Form::get_special_mail_tags() as $mail_tag ) {
 				$special  = apply_filters( 'wpcf7_special_mail_tags', null, $mail_tag->field_name(), $template, $mail_tag );
-				$template = str_replace( "[{$mail_tag->field_name()}]", $special, $template );
+				$template = str_replace( "[{$mail_tag->field_name()}]", (string) $special, $template );
 			}
 
 			// Clean unchanged tags.
 
-			$template         = $this->replace_tags( $template );
+			$template = $this->replace_tags( $template );
+
+			self::unhook_submitted_brackets_mask();
+
+			$template         = self::unmask_submitted_brackets( $template, $token );
 			$record['fields'] = $template;
 		} else {
 			$record = $this->get_record_by_tag_map( $submited_data, $tags_map );

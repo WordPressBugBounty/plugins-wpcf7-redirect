@@ -296,8 +296,6 @@ class WPCF7R_Post_Types {
 	 * @return void
 	 */
 	public function debug_helper() {
-		echo '<pre>';
-		print_r( get_post_custom() );
-		echo '</pre>';
+		echo '<pre>' . esc_html( print_r( get_post_custom(), true ) ) . '</pre>';
 	}
 }
