@@ -572,7 +572,7 @@ class WPCF7r_Utils {
 	 *
 	 * @param int    $post_id     The form ID to associate the action with.
 	 * @param string $rule_name   The name of the rule, which will be used as the post title.
-	 * @param int    $rule_id     The ID of the rule to associate the action with.
+	 * @param string $rule_id     The ID of the rule to associate the action with.
 	 * @param string $action_type The type of action to create.
 	 *
 	 * @return WPCF7R_Action The created action object.

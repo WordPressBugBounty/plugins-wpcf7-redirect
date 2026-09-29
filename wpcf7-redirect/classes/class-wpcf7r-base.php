@@ -98,6 +98,8 @@ class WPCF7R_Base {
 		$this->wpcf7_submission = new WPCF7r_Submission();
 
 		$this->wpcf7_user_panel = new WPCF7R_User();
+
+		WPCF7R_Abilities::init();
 	}
 
 	/**
@@ -248,6 +250,7 @@ class WPCF7R_Base {
 		require_once WPCF7_PRO_REDIRECT_CLASSES_PATH . 'class-wpcf7r-action.php';
 		require_once WPCF7_PRO_REDIRECT_CLASSES_PATH . 'class-wpcf7r-user.php';
 		require_once WPCF7_PRO_REDIRECT_CLASSES_PATH . 'class-wpcf7r-module.php';
+		require_once WPCF7_PRO_REDIRECT_CLASSES_PATH . 'class-wpcf7r-abilities.php';
 
 		// Load all actions.
 		foreach ( glob( WPCF7_PRO_REDIRECT_CLASSES_PATH . 'actions/*.php' ) as $filename ) {

@@ -115,16 +115,16 @@ class WPCF7R_Form {
 	/**
 	 * Main class Constructor
 	 *
-	 * @param int|\WPCF7_ContactForm $cf7 The contact form 7 object or ID.
-	 * @param WPCF7_Submission|null  $submission The submission object.
-	 * @param object|null            $validation_obj The validation object.
+	 * @param int|string|\WPCF7_ContactForm $cf7 The contact form 7 object or ID.
+	 * @param WPCF7_Submission|null         $submission The submission object.
+	 * @param object|null                   $validation_obj The validation object.
 	 */
 	public function __construct( $cf7, $submission = null, $validation_obj = null ) {
-		if ( is_int( $cf7 ) ) {
-			$this->post_id = $cf7;
+		if ( is_int( $cf7 ) || ( is_string( $cf7 ) && ctype_digit( $cf7 ) ) ) {
+			$this->post_id = (int) $cf7;
 			$cf7           = WPCF7_ContactForm::get_instance( $this->post_id );
-		} elseif ( $cf7 ) {
-			$this->post_id = $cf7->id();
+		} elseif ( $cf7 instanceof WPCF7_ContactForm ) {
+			$this->post_id = (int) $cf7->id();
 		} else {
 			return;
 		}

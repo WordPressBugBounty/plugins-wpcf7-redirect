@@ -3,7 +3,7 @@ Tags: contact form 7, cf7 redirect, redirect, mailchimp, webhook
 Contributors: codeinwp, themeisle, yuvalsabar, regevlio
 Requires at least: 5.2.0
 Tested up to: 7.1
-Stable tag: 3.2.12
+Stable tag: 3.2.13
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -158,6 +158,15 @@ Please follow the reporting protocols outlined on our [Security Page](https://th
 5. Save Entries Action
 
 == Changelog ==
+
+#####   Version 3.2.13 (2026-09-29)
+
+- Fixed form deletion failing when the form ID is text.
+- Fixed Popup preview warnings when Contact Form 7 styles load.
+- Added AI agent support: let AI assistants read and change your Redirection for Contact Form 7 actions and settings.
+
+
+
 
 #####   Version 3.2.12 (2026-09-08)
 

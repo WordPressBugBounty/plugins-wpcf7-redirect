@@ -46,6 +46,8 @@ class Wpcf7_Redirect {
 
 		add_filter( 'redirection_for_contact_form_7_float_widget_metadata', array( $this, 'float_widget_data' ) );
 		add_filter( 'wpcf7_redirect_float_widget_metadata', array( $this, 'float_widget_data' ) );
+		add_filter( 'wpcf7_redirect_ai_connect_metadata', array( $this, 'ai_connect_data' ) );
+		add_filter( 'redirection_for_contact_form_7_ai_connect_metadata', array( $this, 'ai_connect_data' ) );
 		add_filter( 'themeisle_sdk_blackfriday_data', array( $this, 'add_black_friday_data' ) );
 
 		$dashboard = new \WPCF7R_Dashboard();
@@ -93,6 +95,28 @@ class Wpcf7_Redirect {
 			'premium_support_link' => $has_legacy ? 'https://users.freemius.com/login' : '',
 			'upgrade_link'         => tsdk_utmify( wpcf7_redirect_upgrade_url(), 'floatWidget' ),
 			'documentation_link'   => tsdk_utmify( 'https://docs.themeisle.com/collection/2014-redirection-for-contact-form-7', 'floatWidget' ),
+		);
+	}
+
+	/**
+	 * Get the AI Connect data.
+	 *
+	 * @return array<string, mixed>
+	 */
+	public function ai_connect_data() {
+		return array(
+			'name'           => __( 'Redirection for Contact Form 7', 'wpcf7-redirect' ),
+			'notice_cases'   => array(
+				__( 'set up a thank-you page redirect', 'wpcf7-redirect' ),
+				__( 'summarize your saved form entries', 'wpcf7-redirect' ),
+				__( 'review what happens after a form is submitted', 'wpcf7-redirect' ),
+			),
+			'prompts'        => array(
+				__( 'Send visitors to /thank-you/ after they submit my Contact form.', 'wpcf7-redirect' ),
+				__( 'Summarize what people asked through my Contact form in the last 30 days.', 'wpcf7-redirect' ),
+				__( 'Disable every Redirection for Contact Form 7 action on my Newsletter form except the redirect.', 'wpcf7-redirect' ),
+			),
+			'ability_prefix' => 'cf7-actions',
 		);
 	}
 

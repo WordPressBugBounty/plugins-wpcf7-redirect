@@ -8,7 +8,7 @@
 	background-color: var(--rcf7-background);
 
 	.error:not(:has(#redirect-dashboard)),
-	.notice:not(:has(#redirect-dashboard, .themeisle-sale-container)) {
+	.notice:not(:has(#redirect-dashboard, .themeisle-sale-container)):not(.ti-ai-notice) {
 		display: none;
 	}
 }
