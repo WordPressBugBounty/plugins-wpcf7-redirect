@@ -196,14 +196,20 @@ class WPCF7R_Save_File {
 	/**
 	 * Move a file to the upload directory with a random hash appended to the filename.
 	 *
-	 * @param string $file_path The path to the original file.
+	 * @param string $file_path The path to a file uploaded through Contact Form 7.
 	 * @return string|false The destination path if successful, false otherwise.
 	 */
 	public function move_file_to_upload( $file_path ) {
 
 		$validate = wp_check_filetype( $file_path );
 		if ( ! $validate['type'] || preg_match( '#^[a-zA-Z0-9+.-]+://#', $file_path ) ) {
-			die( esc_html__( 'File type is not allowed', 'wpcf7-redirect' ) );
+			wp_die( esc_html__( 'File type is not allowed', 'wpcf7-redirect' ) );
+		}
+
+		$source_path = realpath( $file_path );
+		$tmp_dir     = realpath( wpcf7_upload_tmp_dir() );
+		if ( ! $source_path || ! $tmp_dir || 0 !== strpos( wp_normalize_path( $source_path ), trailingslashit( wp_normalize_path( $tmp_dir ) ) ) ) {
+			return false;
 		}
 
 		global $wp_filesystem;
@@ -222,7 +228,7 @@ class WPCF7R_Save_File {
 		$destination      = wp_unique_filename( $upload_dir, $new_file_name );
 		$destination_path = path_join( $upload_dir, $destination );
 
-		$moved = $wp_filesystem->copy( $file_path, $destination_path, true );
+		$moved = $wp_filesystem->copy( $source_path, $destination_path, true );
 
 		if ( ! $moved ) {
 			return false;

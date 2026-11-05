@@ -184,6 +184,11 @@ class WPCF7R_Action_Save_Lead extends WPCF7R_Action {
 					$file_path = reset( $file_path );
 				}
 
+				// An optional file field left empty has no uploaded path.
+				if ( ! $file_path ) {
+					continue;
+				}
+
 				$type          = pathinfo( $file_path, PATHINFO_EXTENSION );
 				$uploaded_path = $save_file_helper->move_file_to_upload( $file_path );
 

@@ -120,6 +120,11 @@ class WPCF7R_Form {
 	 * @param object|null                   $validation_obj The validation object.
 	 */
 	public function __construct( $cf7, $submission = null, $validation_obj = null ) {
+		// Form posts outlive a deactivated Contact Form 7.
+		if ( ! class_exists( 'WPCF7_ContactForm' ) ) {
+			return;
+		}
+
 		if ( is_int( $cf7 ) || ( is_string( $cf7 ) && ctype_digit( $cf7 ) ) ) {
 			$this->post_id = (int) $cf7;
 			$cf7           = WPCF7_ContactForm::get_instance( $this->post_id );

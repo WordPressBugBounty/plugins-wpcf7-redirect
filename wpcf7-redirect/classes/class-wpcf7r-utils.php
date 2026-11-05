@@ -151,15 +151,24 @@ class WPCF7r_Utils {
 			return;
 		}
 
-		$wpcf7r       = get_cf7r_form( $post_id );
-		$action_posts = $wpcf7r->get_actions( 'default' );
+		// Query the posts directly: Contact Form 7 or an action's add-on may be inactive.
+		$action_ids = get_posts(
+			array(
+				'post_type'      => 'wpcf7r_action',
+				'post_status'    => 'any',
+				'posts_per_page' => -1,
+				'fields'         => 'ids',
+				'meta_query'     => array(
+					array(
+						'key'   => 'wpcf7_id',
+						'value' => $post_id,
+					),
+				),
+			)
+		);
 
-		if ( ! is_array( $action_posts ) ) {
-			return;
-		}
-
-		foreach ( $action_posts as $action_post ) {
-			wp_delete_post( $action_post->get_id() );
+		foreach ( $action_ids as $action_id ) {
+			wp_delete_post( $action_id );
 		}
 	}
 
@@ -856,30 +865,46 @@ class WPCF7r_Utils {
 			add_filter( 'after_qs_cf7_api_send_lead', array( $this, 'after_fake_submission' ), 10, 3 );
 
 			if ( isset( $data['wpcf7-redirect']['actions'] ) ) {
-				$response = array();
-
 				$posted_action = reset( $data['wpcf7-redirect']['actions'] );
 				$posted_action = $posted_action['test_values'];
 				$_POST         = $posted_action;
-				// this will create a fake form submission.
-				$this->cf7r_form = get_cf7r_form( $cf7_id );
-				$this->cf7r_form->enable_action( $action_id );
 
-				$cf7_form   = $this->cf7r_form->get_cf7_form_instance();
-				$submission = WPCF7_Submission::get_instance( $cf7_form ); // Note: it auto-triggers the process.
-
-				if ( $submission->get_status() === 'validation_failed' ) {
-					$invalid_fields             = $submission->get_invalid_fields();
-					$response['status']         = 'failed';
-					$response['invalid_fields'] = $invalid_fields;
-				} else {
-					$response['status'] = 'success';
-					$response['html']   = $this->get_test_api_results_html();
-				}
-
-				wp_send_json( $response );
+				$this->send_api_test_response( $cf7_id, $action_id );
 			}
 		}
+	}
+
+	/**
+	 * Run a fake submission of the form and send the API test result.
+	 *
+	 * @param int|'' $cf7_id    The contact form ID.
+	 * @param int|'' $action_id The action to test.
+	 * @return void
+	 */
+	private function send_api_test_response( $cf7_id, $action_id ) {
+		$response = array();
+
+		$this->cf7r_form = get_cf7r_form( $cf7_id );
+		$cf7_form        = $this->cf7r_form->get_cf7_form_instance();
+
+		if ( ! $cf7_form ) {
+			wp_die( '-1' );
+		}
+
+		$this->cf7r_form->enable_action( $action_id );
+
+		$submission = WPCF7_Submission::get_instance( $cf7_form ); // Note: it auto-triggers the process.
+
+		if ( $submission->get_status() === 'validation_failed' ) {
+			$invalid_fields             = $submission->get_invalid_fields();
+			$response['status']         = 'failed';
+			$response['invalid_fields'] = $invalid_fields;
+		} else {
+			$response['status'] = 'success';
+			$response['html']   = $this->get_test_api_results_html();
+		}
+
+		wp_send_json( $response );
 	}
 	/**
 	 * Store the results from the API.

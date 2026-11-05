@@ -245,7 +245,7 @@ class WPCF7R_Post_Types {
 	/**
 	 * Save the meta when the post is saved.
 	 *
-	 * @param [int] $post_id - The post ID.
+	 * @param int $post_id - The post ID.
 	 * @return void
 	 */
 	public function save_changes( $post_id ) {
@@ -255,37 +255,27 @@ class WPCF7R_Post_Types {
 			return;
 		}
 
-		// phpcs:ignore WordPress.Security.NonceVerification.Missing
+		// Save Entry inserts leads during public form submissions, so only trust the entry edit screen.
+		$nonce = isset( $_POST['_wpnonce'] ) ? sanitize_text_field( wp_unslash( $_POST['_wpnonce'] ) ) : '';
+		if ( ! wp_verify_nonce( $nonce, 'update-post_' . $post_id ) || ! current_user_can( 'edit_post', $post_id ) ) {
+			return;
+		}
+
 		if ( ! isset( $_POST['wpcf7-redirect'] ) || ! is_array( $_POST['wpcf7-redirect'] ) ) {
 			return;
 		}
 
-		// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+		// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 		$settings_meta = $_POST['wpcf7-redirect'];
 
-		$save_file_helper = new WPCF7R_Save_File();
-		$save_file_helper->init_uploads_dir();
 		foreach ( $settings_meta as $meta_key => $meta_value ) {
 			$meta_key = sanitize_key( $meta_key );
 
-			// Move the file to the upload directory.
+			// Stored file paths come only from Save Entry; the edit screen has no file input.
 			if ( 'files' === $meta_key ) {
-				$files = array();
-				foreach ( $meta_value as $file ) {
-					if ( empty( $file ) || empty( $file['path'] ) ) {
-						continue;
-					}
-
-					$uploaded_file = $save_file_helper->move_file_to_upload( $file['path'] );
-
-					if ( $uploaded_file ) {
-						$files = array(
-							'path' => $uploaded_file,
-						);
-					}
-				}
-				$meta_value = $files;
+				continue;
 			}
+
 			update_post_meta( $post_id, $meta_key, $meta_value );
 		}
 	}

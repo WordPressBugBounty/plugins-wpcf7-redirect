@@ -323,12 +323,12 @@ class Wpcf7_Redirect {
 				$max_plan       = $plan;
 				$license_key    = apply_filters( 'product_' . $addon_slug . '_license_key', false );
 				$license_status = apply_filters( 'product_' . $addon_slug . '_license_status', false );
-				$has_expired    = $has_expired || 'expired' === $license_status || 'active-expired' === $license_status;
+				$has_expired    = $has_expired || in_array( $license_status, array( 'expired', 'active_expired', 'active-expired' ), true );
 			}
 		}
 
 		$is_valid   = 'valid' === $license_status;
-		$is_expired = 'expired' === $license_status || 'active-expired' === $license_status;
+		$is_expired = in_array( $license_status, array( 'expired', 'active_expired', 'active-expired' ), true );
 
 		if ( $is_valid && ! $has_expired ) {
 			// translators: %s is the discount percentage.
@@ -338,6 +338,8 @@ class Wpcf7_Redirect {
 			$cta_label = __( 'See your options', 'wpcf7-redirect' );
 		} elseif ( $is_expired ) {
 			// translators: %s is the discount percentage.
+			$config['upgrade_menu_text'] = sprintf( __( 'BF Sale - %s off', 'wpcf7-redirect' ), '50%' );
+			// translators: %s is the discount percentage.
 			$config['plugin_meta_message'] = sprintf( __( 'Black Friday Sale - %s off', 'wpcf7-redirect' ), '50%' );
 			$message                       = __( 'Your RCF7 Pro features are still here, just locked. Renew at a reduced rate this week.', 'wpcf7-redirect' );
 			$cta_label                     = __( 'Reactivate now', 'wpcf7-redirect' );
@@ -346,6 +348,8 @@ class Wpcf7_Redirect {
 			$config['plugin_meta_message'] = sprintf( __( 'Black Friday Sale - %s off', 'wpcf7-redirect' ), '60%' );
 			// translators: %s - discount.
 			$config['title'] = sprintf( __( 'RCF7 Pro: %s off this week', 'wpcf7-redirect' ), '60%' );
+			// translators: %s is the discount percentage.
+			$config['upgrade_menu_text'] = sprintf( __( 'BF Sale - %s off', 'wpcf7-redirect' ), '60%' );
 		}
 
 		$url_params = array(

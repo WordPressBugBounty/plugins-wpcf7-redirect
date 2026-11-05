@@ -72,26 +72,59 @@ class WPCF7r_Submission {
 
 				if ( $results ) {
 					foreach ( $results as $result_type => $result_actions ) {
-						if ( ( 'FireScript' === $result_type || 'firescript' === strtolower( $result_type ) ) && $result_action ) {
-							$this->scripts = $result_actions;
-
-							add_action( 'wp_head', array( $this, 'add_header_script' ) );
-						}
-
-						foreach ( $result_actions as $result_action ) {
-							if ( 'redirect' === $result_type ) {
-								$this->redirect_url = $result_action['redirect_url'];
-
-								if ( 'new_tab' === $result_action['type'] ) {
-									add_action( 'wp_head', array( $this, 'open_new_tab' ), 9999 );
-								} else {
-									// Do this last.
-									add_action( 'wp_head', array( $this, 'redirect' ), 9999 );
-								}
-							}
+						if ( 'firescript' === strtolower( $result_type ) ) {
+							$this->hook_header_scripts( $result_actions );
+						} elseif ( 'redirect' === $result_type ) {
+							$this->hook_redirects( $result_actions );
 						}
 					}
 				}
+			}
+		}
+	}
+
+	/**
+	 * Print the FireScript results that hold a script in the page head.
+	 *
+	 * @param list<string|array{}> $results FireScript action results, empty when their conditions are not met.
+	 */
+	private function hook_header_scripts( array $results ): void {
+		$scripts = array_values(
+			array_filter(
+				$results,
+				static function ( $script ): bool {
+					return is_string( $script ) && '' !== $script;
+				}
+			)
+		);
+
+		if ( $scripts ) {
+			$this->scripts = $scripts;
+
+			add_action( 'wp_head', array( $this, 'add_header_script' ) );
+		}
+	}
+
+	/**
+	 * Print the redirect for each Redirect result that has a destination.
+	 *
+	 * @param list<array{type?: string, redirect_url?: string, delay?: int}> $results Redirect action results, empty when there is no destination.
+	 */
+	private function hook_redirects( array $results ): void {
+		foreach ( $results as $result ) {
+			$redirect_url = (string) ( $result['redirect_url'] ?? '' );
+
+			if ( '' === $redirect_url ) {
+				continue;
+			}
+
+			$this->redirect_url = $redirect_url;
+
+			if ( 'new_tab' === ( $result['type'] ?? '' ) ) {
+				add_action( 'wp_head', array( $this, 'open_new_tab' ), 9999 );
+			} else {
+				// Do this last.
+				add_action( 'wp_head', array( $this, 'redirect' ), 9999 );
 			}
 		}
 	}

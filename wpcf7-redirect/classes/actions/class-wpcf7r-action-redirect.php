@@ -214,8 +214,6 @@ class WPCF7R_Action_Redirect extends WPCF7R_Action {
 	 * @return array Response data for the redirect action.
 	 */
 	public function process( $submission ) {
-		$response = array();
-
 		$this->posted_data = $submission->get_posted_data();
 
 		foreach ( $this->posted_data as $posted_data_key => $posted_data_value ) {
@@ -226,26 +224,22 @@ class WPCF7R_Action_Redirect extends WPCF7R_Action {
 			}
 		}
 
-		if ( $this->get( 'use_external_url' ) === 'on' && $this->get( 'external_url' ) ) {
-			$response = array(
-				'type'         => self::ACTION_SLUG,
-				'redirect_url' => $this->replace_tags( $this->get( 'external_url' ) ),
-				'delay'        => $this->get( 'delay_redirect_seconds' ) ? (int) $this->get( 'delay_redirect_seconds' ) : 0,
-			);
-		} elseif ( $this->get( 'page_id' ) ) {
-			$response = array(
-				'type'         => self::ACTION_SLUG,
-				'redirect_url' => get_permalink( $this->get( 'page_id' ) ),
-				'delay'        => $this->get( 'delay_redirect_seconds' ) ? (int) $this->get( 'delay_redirect_seconds' ) : 0,
-			);
+		$redirect_url = $this->get_redirect_url();
+
+		if ( '' === $redirect_url ) {
+			return array();
 		}
 
-		if ( $this->get( 'redirect_as_x_form_encoded_url' ) && isset( $response['redirect_url'] ) && $response['redirect_url'] ) {
+		$response = array(
+			'type'         => self::ACTION_SLUG,
+			'redirect_url' => $redirect_url,
+			'delay'        => $this->get( 'delay_redirect_seconds' ) ? (int) $this->get( 'delay_redirect_seconds' ) : 0,
+		);
+
+		if ( $this->get( 'redirect_as_x_form_encoded_url' ) ) {
 			ob_start();
 
-			$params = parse_url( $response['redirect_url'] );
-
-			parse_str( $params['query'], $fields );
+			parse_str( (string) wp_parse_url( $response['redirect_url'], PHP_URL_QUERY ), $fields );
 
 			if ( isset( $fields['sum'] ) && isset( $fields['qty'] ) ) {
 				$fields['sum'] = $fields['sum'] * $fields['qty'];
@@ -295,5 +289,22 @@ class WPCF7R_Action_Redirect extends WPCF7R_Action {
 		}
 
 		return $response;
+	}
+
+	/**
+	 * Get the configured destination: the external URL with its tags replaced, or the selected page.
+	 *
+	 * @return string The destination, or an empty string when none is set or the page no longer exists.
+	 */
+	private function get_redirect_url(): string {
+		if ( $this->get( 'use_external_url' ) === 'on' && $this->get( 'external_url' ) ) {
+			return $this->replace_tags( $this->get( 'external_url' ) );
+		}
+
+		if ( $this->get( 'page_id' ) ) {
+			return (string) get_permalink( $this->get( 'page_id' ) );
+		}
+
+		return '';
 	}
 }
