@@ -3,7 +3,7 @@ Tags: contact form 7, cf7 redirect, redirect, mailchimp, webhook
 Contributors: codeinwp, themeisle, yuvalsabar, regevlio
 Requires at least: 5.2.0
 Tested up to: 7.1
-Stable tag: 3.2.15
+Stable tag: 3.2.16
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -158,6 +158,15 @@ Please follow the reporting protocols outlined on our [Security Page](https://th
 5. Save Entries Action
 
 == Changelog ==
+
+#####   Version 3.2.16 (2026-11-05)
+
+- Fixed frontend assets loading on pages without a contact form
+- Added a Help panel to make it easier to contact support and find answers
+- Enhanced security
+
+
+
 
 #####   Version 3.2.15 (2026-11-04)
 

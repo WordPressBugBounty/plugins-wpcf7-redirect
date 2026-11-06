@@ -119,54 +119,38 @@ class WPCF7R_Action_Erasedatarequest extends WPCF7R_Action {
 	 * Handle a simple redirect rule
 	 *
 	 * @param object $submission The form submission object.
-	 * @return mixed
+	 * @return WP_Error|string
 	 */
 	public function process( $submission ) {
-		$response = array();
-
 		$this->posted_data = $submission->get_posted_data();
 
-		$action_type = $this->get( 'request_type' );
-		$status      = 'pending';
-
-		if ( ! $this->get( 'send_confirmation_email' ) ) {
-			$status = 'confirmed';
-		}
-
-		$email_address = $this->get_user_email_address();
-
-		$request_id = wp_create_user_request( $email_address, $action_type, array(), $status );
-		$message    = '';
+		// Always pending: a submitted address is unverified until core's confirmation link is clicked.
+		$request_id = wp_create_user_request( $this->get_user_email_address(), $this->get( 'request_type' ) );
 
 		if ( is_wp_error( $request_id ) ) {
-			$message = $request_id->get_error_message();
-		} elseif ( ! $request_id ) {
-			$message = __( 'Unable to initiate confirmation request.', 'wpcf7-redirect' );
+			return new WP_Error( 'erase_data_request', $request_id->get_error_message() );
 		}
 
-		if ( $message ) {
-			$response = new WP_Error( 'erase_data_request', $message );
+		if ( ! $request_id ) {
+			return new WP_Error( 'erase_data_request', __( 'Unable to initiate confirmation request.', 'wpcf7-redirect' ) );
 		}
 
-		if ( ! $response ) {
-			if ( 'pending' === $status ) {
-				wp_send_user_request( $request_id );
-
-				$response = __( 'Confirmation request initiated successfully.', 'wpcf7-redirect' );
-			} elseif ( 'confirmed' === $status ) {
-				$response = __( 'Request added successfully.', 'wpcf7-redirect' );
-			}
+		if ( ! $this->get( 'send_confirmation_email' ) ) {
+			return __( 'Request added successfully.', 'wpcf7-redirect' );
 		}
 
-		return $response;
+		wp_send_user_request( $request_id );
+
+		return __( 'Confirmation request initiated successfully.', 'wpcf7-redirect' );
 	}
 
 	/**
 	 * Get the user email if the user exists
 	 *
-	 * @return string The email address.
+	 * @return string The email address, or an empty string when no user matches.
 	 */
 	private function get_user_email_address() {
+		$email_address           = '';
 		$username_or_email_field = $this->get( 'email_field' );
 
 		$username_or_email_address = $this->get_submitted_value( $username_or_email_field );
@@ -187,7 +171,7 @@ class WPCF7R_Action_Erasedatarequest extends WPCF7R_Action {
 	 * Process validation for the submission
 	 *
 	 * @param object $submission The form submission object.
-	 * @return array
+	 * @return array{invalid_tags?: list<WP_Error>}
 	 */
 	public function process_validation( $submission ) {
 
@@ -196,6 +180,7 @@ class WPCF7R_Action_Erasedatarequest extends WPCF7R_Action {
 		$username_or_email_field = $this->get( 'email_field' );
 
 		$message = null;
+		$results = array();
 
 		$email_address = $this->get_user_email_address();
 

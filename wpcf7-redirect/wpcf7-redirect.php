@@ -2,7 +2,7 @@
 /**
  * Plugin Name:  Redirection for Contact Form 7
  * Description:  The ultimate add-on for Contact Form 7 - redirect to any page after submission, fire scripts, save submissions in database, and much more options to make Contact Form 7 powerful than ever.
- * Version:      3.2.15
+ * Version:      3.2.16
  * Author:       Themeisle
  * Author URI:   http://themeisle.com
  * License:      GPLv3 or later
@@ -28,7 +28,7 @@ if ( ! defined( 'CF7_REDIRECT_DEBUG' ) ) {
 	define( 'CF7_REDIRECT_DEBUG', get_option( 'wpcf_debug' ) ? true : false );
 }
 
-define( 'WPCF7_PRO_REDIRECT_PLUGIN_VERSION', '3.2.15' );
+define( 'WPCF7_PRO_REDIRECT_PLUGIN_VERSION', '3.2.16' );
 define( 'WPCF7_PRO_MIGRATION_VERSION', '1' );
 define( 'WPCF7_PRO_REDIRECT_CLASSES_PATH', plugin_dir_path( __FILE__ ) . 'classes/' );
 define( 'WPCF7_PRO_REDIRECT_PATH', plugin_dir_path( __FILE__ ) );
@@ -224,6 +224,32 @@ function wpcf7_redirect_pro_init() {
 				'has_upgrade_menu' => ! wpcf7_has_pro(),
 				'upgrade_text'     => esc_html__( 'Upgrade to Pro', 'wpcf7-redirect' ),
 				'upgrade_link'     => tsdk_utmify( wpcf7_redirect_upgrade_url(), 'aboutUsPage' ),
+			);
+		}
+	);
+
+	/*
+	 * Opts into the SDK Support Hub: one Help button on the plugin's screens and
+	 * the deactivation window. It replaces the float widget. The plugin's screens
+	 * already fire `themeisle_internal_page`, so no `pages` list is needed.
+	 */
+	add_filter(
+		'wpcf7_redirect_support_hub_metadata',
+		function () {
+			return array(
+				'is_pro' => wpcf7_has_pro(),
+				'links'  => array(
+					array(
+						'icon' => 'book-alt',
+						'text' => __( 'Documentation', 'wpcf7-redirect' ),
+						'url'  => 'https://docs.themeisle.com/collection/2014-redirection-for-contact-form-7',
+					),
+					array(
+						'icon' => 'groups',
+						'text' => __( 'Support', 'wpcf7-redirect' ),
+						'url'  => 'https://wordpress.org/support/plugin/wpcf7-redirect/',
+					),
+				),
 			);
 		}
 	);

@@ -90,7 +90,9 @@ class WPCF7r_Form_Helper {
 		add_action( 'wpcf7_admin_load', array( $this, 'allow_panel_html' ), 10, 2 );
 		add_action( 'wpcf7_after_save', array( $this, 'store_meta' ) );
 		// add contact form scripts.
-		add_action( 'wp_enqueue_scripts', array( $this, 'front_end_scripts' ) );
+		add_action( 'wpcf7_enqueue_scripts', array( $this, 'front_end_scripts' ) );
+		// Runs just before core prints footer scripts (priority 10), so any direct CF7 enqueue is caught.
+		add_action( 'wp_print_footer_scripts', array( $this, 'front_end_scripts' ), 9 );
 		// add contact form scripts for admin panel.
 		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_backend' ) );
 		add_action(
@@ -113,11 +115,16 @@ class WPCF7r_Form_Helper {
 	/**
 	 * Loads frontend scripts and styles.
 	 *
-	 * Only loads when contact form instance is created.
+	 * Only loads where the Contact Form 7 script is enqueued, so the `contact-form-7` dependency
+	 * never pulls that script onto a page without its `wpcf7` object.
 	 *
 	 * @return void
 	 */
 	public function front_end_scripts() {
+		// Form templates may call wpcf7_enqueue_scripts() once per form.
+		if ( ! wp_script_is( 'contact-form-7' ) || wp_script_is( 'wpcf7-redirect-script' ) ) {
+			return;
+		}
 
 		$dependencies = ( include WPCF7_PRO_REDIRECT_PATH . '/build/assets/frontend-script.asset.php' );
 
