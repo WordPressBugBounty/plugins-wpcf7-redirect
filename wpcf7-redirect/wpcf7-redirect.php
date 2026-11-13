@@ -2,7 +2,7 @@
 /**
  * Plugin Name:  Redirection for Contact Form 7
  * Description:  The ultimate add-on for Contact Form 7 - redirect to any page after submission, fire scripts, save submissions in database, and much more options to make Contact Form 7 powerful than ever.
- * Version:      3.2.17
+ * Version:      3.2.18
  * Author:       Themeisle
  * Author URI:   http://themeisle.com
  * License:      GPLv3 or later
@@ -28,7 +28,7 @@ if ( ! defined( 'CF7_REDIRECT_DEBUG' ) ) {
 	define( 'CF7_REDIRECT_DEBUG', get_option( 'wpcf_debug' ) ? true : false );
 }
 
-define( 'WPCF7_PRO_REDIRECT_PLUGIN_VERSION', '3.2.17' );
+define( 'WPCF7_PRO_REDIRECT_PLUGIN_VERSION', '3.2.18' );
 define( 'WPCF7_PRO_MIGRATION_VERSION', '1' );
 define( 'WPCF7_PRO_REDIRECT_CLASSES_PATH', plugin_dir_path( __FILE__ ) . 'classes/' );
 define( 'WPCF7_PRO_REDIRECT_PATH', plugin_dir_path( __FILE__ ) );
@@ -242,7 +242,7 @@ function wpcf7_redirect_pro_init() {
 					array(
 						'icon' => 'book-alt',
 						'text' => __( 'Documentation', 'wpcf7-redirect' ),
-						'url'  => 'https://docs.themeisle.com/collection/2014-redirection-for-contact-form-7',
+						'url'  => tsdk_utmify( 'https://docs.themeisle.com/redirection-for-contact-form-7/', 'documentation', 'support-hub' ),
 					),
 					array(
 						'icon' => 'groups',

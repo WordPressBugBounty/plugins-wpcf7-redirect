@@ -7,9 +7,15 @@ import {
 import { __ } from '@wordpress/i18n';
 import { useData } from '../../DataContext';
 
-const ResourceItem = ( { icon, title, description, href } ) => {
+const ResourceItem = ( { icon, title, description, href, ...rest } ) => {
 	return (
-		<a href={ href } target="_blank" className="rcf7-resource rcf7-card">
+		<a
+			href={ href }
+			target="_blank"
+			rel="noreferrer noopener"
+			className="rcf7-resource rcf7-card"
+			{ ...rest }
+		>
 			<span>{ icon }</span>
 			<span className="rcf7-resource__title">{ title }</span>
 			<span className="rcf7-resource__description">{ description }</span>
@@ -39,6 +45,8 @@ export const ResourcesPanel = () => {
 				title={ __( 'Support', 'wpcf7-redirect' ) }
 				description={ __( 'Get help from our team', 'wpcf7-redirect' ) }
 				href={ data.links.support }
+				// The SDK's Support Hub opens its Help panel for [data-ti-support] links; without it the forum link opens.
+				data-ti-support="dashboard-resources"
 			/>
 			<ResourceItem
 				icon={ <Zap /> }

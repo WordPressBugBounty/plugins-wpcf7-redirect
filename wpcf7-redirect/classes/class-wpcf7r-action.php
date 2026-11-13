@@ -849,7 +849,7 @@ class WPCF7R_Action {
 			'show_selector' => '.conditional-logic-blocks',
 			'value'         => $conditional_logic_enabled ? $this->get( 'conditional_logic' ) : 'on',
 			'disabled'      => ! $conditional_logic_enabled,
-			'tooltip'       => sprintf( '<a target="_blank" href="https://docs.themeisle.com/article/2018-using-conditional-logic-redirect-for-contact-form-7">%s</a>', esc_attr__( 'Check the documentation to learn more', 'wpcf7-redirect' ), __( 'Info', 'wpcf7-redirect' ) ),
+			'tooltip'       => sprintf( '<a target="_blank" href="%2$s">%1$s</a>', esc_attr__( 'Check the documentation to learn more', 'wpcf7-redirect' ), esc_url( tsdk_utmify( 'https://docs.themeisle.com/redirection-for-contact-form-7/using-conditional-logic-redirect-for-contact-form-7', 'conditional-logic', 'form-editor' ) ) ),
 		);
 
 		$args['blocks'] = array(

@@ -295,15 +295,15 @@ class WPCF7R_Leads_Manager {
 		fprintf( $file, chr( 0xEF ) . chr( 0xBB ) . chr( 0xBF ) );
 
 		// Print unified headers.
-		fputcsv( $file, array_values( $csv_headers ) );
+		fputcsv( $file, array_map( 'wpcf7r_prepare_csv_cell', array_values( $csv_headers ) ) );
 
 		// Print all leads with the same header structure.
 		foreach ( $entries_data as $entry_data ) {
 			$values_to_print = array();
 
 			foreach ( $csv_headers as $header_key => $header_value ) {
-				$values_to_print[] = isset( $entry_data[ $header_key ] ) ?
-					wp_kses_post( $entry_data[ $header_key ] ) : '';
+				$value_to_print    = isset( $entry_data[ $header_key ] ) ? wp_kses_post( $entry_data[ $header_key ] ) : '';
+				$values_to_print[] = wpcf7r_prepare_csv_cell( $value_to_print );
 			}
 
 			fputcsv( $file, $values_to_print );

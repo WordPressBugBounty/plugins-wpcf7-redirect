@@ -1,9 +1,9 @@
 <?php return array(
     'root' => array(
         'name' => 'codeinwp/redirection-for-contact-form-7',
-        'pretty_version' => 'v3.2.17',
-        'version' => '3.2.17.0',
-        'reference' => 'be15dfbf3ffd089852f9aca96d13e4bcbe8aec90',
+        'pretty_version' => 'v3.2.18',
+        'version' => '3.2.18.0',
+        'reference' => '45b883ec87bda667845ed52d151e619e135e9631',
         'type' => 'wordpress-plugin',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -11,9 +11,9 @@
     ),
     'versions' => array(
         'codeinwp/redirection-for-contact-form-7' => array(
-            'pretty_version' => 'v3.2.17',
-            'version' => '3.2.17.0',
-            'reference' => 'be15dfbf3ffd089852f9aca96d13e4bcbe8aec90',
+            'pretty_version' => 'v3.2.18',
+            'version' => '3.2.18.0',
+            'reference' => '45b883ec87bda667845ed52d151e619e135e9631',
             'type' => 'wordpress-plugin',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),

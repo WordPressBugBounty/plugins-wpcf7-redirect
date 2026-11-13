@@ -52,7 +52,9 @@ const AddonsTab = () => {
 				'wpcf7-redirect'
 			),
 			learnMoreLink:
-				'https://docs.themeisle.com/article/2024-using-contact-form-7-to-api-pardot-integration',
+				data.links.addonDocs[
+					'using-contact-form-7-to-api-pardot-integration'
+				],
 		},
 		{
 			id: 'conditional-logic',
@@ -83,7 +85,9 @@ const AddonsTab = () => {
 			isPremium: true,
 			badgeLabel: __( 'Available in the Starter plan', 'wpcf7-redirect' ),
 			learnMoreLink:
-				'https://docs.themeisle.com/article/2018-using-conditional-logic-redirect-for-contact-form-7',
+				data.links.addonDocs[
+					'using-conditional-logic-redirect-for-contact-form-7'
+				],
 		},
 	];
 
@@ -99,7 +103,7 @@ const AddonsTab = () => {
 			icon: <GalleryVertical size={ iconSize } />,
 			badgeLabel: __( 'Available in the Starter plan', 'wpcf7-redirect' ),
 			learnMoreLink:
-				'https://docs.themeisle.com/article/2020-using-contact-form-7-thank-you-popup',
+				data.links.addonDocs[ 'using-contact-form-7-thank-you-popup' ],
 		},
 		{
 			id: 'pdf-generation',
@@ -112,7 +116,9 @@ const AddonsTab = () => {
 			icon: <FileDown size={ iconSize } />,
 			badgeLabel: __( 'Available in the Starter plan', 'wpcf7-redirect' ),
 			learnMoreLink:
-				'https://docs.themeisle.com/article/2227-how-to-create-pdf-from-form-submissions',
+				data.links.addonDocs[
+					'how-to-create-pdf-from-form-submissions'
+				],
 		},
 		{
 			id: 'conditional-logic',
@@ -128,7 +134,9 @@ const AddonsTab = () => {
 				'wpcf7-redirect'
 			),
 			learnMoreLink:
-				'https://docs.themeisle.com/article/2018-using-conditional-logic-redirect-for-contact-form-7',
+				data.links.addonDocs[
+					'using-conditional-logic-redirect-for-contact-form-7'
+				],
 		},
 		{
 			id: 'firescript',
@@ -139,10 +147,7 @@ const AddonsTab = () => {
 			),
 			isPremium: true,
 			icon: <CodeXml size={ iconSize } />,
-			badgeLabel: __(
-				'Available in the Starter plan',
-				'wpcf7-redirect'
-			),
+			badgeLabel: __( 'Available in the Starter plan', 'wpcf7-redirect' ),
 		},
 		{
 			id: 'create-wordpress-posts',
@@ -155,7 +160,9 @@ const AddonsTab = () => {
 			icon: <Pin size={ iconSize } />,
 			badgeLabel: __( 'Available in the Starter plan', 'wpcf7-redirect' ),
 			learnMoreLink:
-				'https://docs.themeisle.com/article/2228-how-to-create-posts-from-contact-form-submissions',
+				data.links.addonDocs[
+					'how-to-create-posts-from-contact-form-submissions'
+				],
 		},
 		{
 			id: 'webhook-integration',
@@ -166,9 +173,14 @@ const AddonsTab = () => {
 			),
 			isPremium: true,
 			icon: <Webhook size={ iconSize } />,
-			badgeLabel: __( 'Available in the Business plan', 'wpcf7-redirect' ),
+			badgeLabel: __(
+				'Available in the Business plan',
+				'wpcf7-redirect'
+			),
 			learnMoreLink:
-				'https://docs.themeisle.com/article/2024-using-contact-form-7-to-api-pardot-integration',
+				data.links.addonDocs[
+					'using-contact-form-7-to-api-pardot-integration'
+				],
 		},
 		{
 			id: 'mailchimp-integration',
@@ -184,7 +196,9 @@ const AddonsTab = () => {
 				'wpcf7-redirect'
 			),
 			learnMoreLink:
-				'https://docs.themeisle.com/article/2021-using-contact-form-7-to-mailchimp-integration',
+				data.links.addonDocs[
+					'using-contact-form-7-to-mailchimp-integration'
+				],
 		},
 		{
 			id: 'paypal-integration',
@@ -228,7 +242,9 @@ const AddonsTab = () => {
 				'wpcf7-redirect'
 			),
 			learnMoreLink:
-				'https://docs.themeisle.com/article/2022-using-salesforce-integration-integrate-contact-form-7-to-salesforces',
+				data.links.addonDocs[
+					'using-salesforce-integration-integrate-contact-form-7-to-salesforces'
+				],
 		},
 		{
 			id: 'hubspot-integration',
@@ -243,8 +259,7 @@ const AddonsTab = () => {
 				'Available in the Enterprise plan',
 				'wpcf7-redirect'
 			),
-			learnMoreLink:
-				'https://docs.themeisle.com/article/2234-hubspot-integration',
+			learnMoreLink: data.links.addonDocs[ 'hubspot-integration' ],
 		},
 		{
 			id: 'twilio-sms',
@@ -260,7 +275,9 @@ const AddonsTab = () => {
 				'wpcf7-redirect'
 			),
 			learnMoreLink:
-				'https://docs.themeisle.com/article/2221-using-twilio-addon-integrate-twilio-addon-to-send-sms-with-contact-form',
+				data.links.addonDocs[
+					'using-twilio-addon-integrate-twilio-addon-to-send-sms-with-contact-form'
+				],
 		},
 	];
 

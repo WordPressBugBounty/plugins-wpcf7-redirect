@@ -927,3 +927,20 @@ function wpcf7r_safe_unserialize( $data ) {
 
 	return $data;
 }
+
+/**
+ * Prepare a value for use in a spreadsheet CSV cell.
+ *
+ * @param string $value Cell value.
+ * @return string
+ */
+function wpcf7r_prepare_csv_cell( $value ) {
+	$starts_with_control = 1 === preg_match( '/^[=+\-@\t\r]/', $value );
+	$is_negative_number  = $starts_with_control && '-' === $value[0] && is_numeric( $value );
+
+	if ( $starts_with_control && ! $is_negative_number ) {
+		return "'" . $value;
+	}
+
+	return $value;
+}

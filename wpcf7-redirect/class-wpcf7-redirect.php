@@ -94,7 +94,7 @@ class Wpcf7_Redirect {
 			'has_upgrade_menu'     => false,
 			'premium_support_link' => $has_legacy ? 'https://users.freemius.com/login' : '',
 			'upgrade_link'         => tsdk_utmify( wpcf7_redirect_upgrade_url(), 'floatWidget' ),
-			'documentation_link'   => tsdk_utmify( 'https://docs.themeisle.com/collection/2014-redirection-for-contact-form-7', 'floatWidget' ),
+			'documentation_link'   => tsdk_utmify( 'https://docs.themeisle.com/redirection-for-contact-form-7/', 'floatWidget' ),
 		);
 	}
 

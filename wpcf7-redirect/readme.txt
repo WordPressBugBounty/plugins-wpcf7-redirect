@@ -3,7 +3,7 @@ Tags: contact form 7, cf7 redirect, redirect, mailchimp, webhook
 Contributors: codeinwp, themeisle, yuvalsabar, regevlio
 Requires at least: 5.2.0
 Tested up to: 7.1
-Stable tag: 3.2.17
+Stable tag: 3.2.18
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -107,7 +107,7 @@ Redirection for Contact Form 7 opens up a world of opportunities! Explore how di
 
 - **📚 Knowledge Base:** We’ve created a complete [documentation](https://docs.themeisle.com/collection/2014-redirection-for-contact-form-7) library and we’re still constantly updating with new tutorials.
 
-- **🦸 Support forum:** We’re here to help. Feel free to open a new thread on the [Support Forum](https://wordpress.org/support/plugin/wpcf7-redirect/).
+- **🦸 Support:** We’re here to help. Ask us from the **Help** button in the plugin’s dashboard, or open a new thread on the [Support Forum](https://wordpress.org/support/plugin/wpcf7-redirect/).
 
 == 🎙️ SEE WHAT REAL USERS TALK ABOUT US ==
 
@@ -158,6 +158,13 @@ Please follow the reporting protocols outlined on our [Security Page](https://th
 5. Save Entries Action
 
 == Changelog ==
+
+#####   Version 3.2.18 (2026-11-13)
+
+- Enhanced security
+
+
+
 
 #####   Version 3.2.17 (2026-11-06)
 

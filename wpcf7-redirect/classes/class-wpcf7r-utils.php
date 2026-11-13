@@ -15,6 +15,12 @@ defined( 'ABSPATH' ) || exit;
  * Contact form 7 redirect utilities
  */
 class WPCF7r_Utils {
+	/**
+	 * Nonce action used by admin preview requests.
+	 *
+	 * @var string
+	 */
+	const PREVIEW_NONCE_ACTION = 'wpcf7r_preview_action';
 
 	/**
 	 * Reference to singleton insance.
@@ -927,11 +933,21 @@ class WPCF7r_Utils {
 	 */
 	public function show_action_preview() {
 		if ( isset( $_GET['wpcf7r-preview'] ) ) {
-			$action_id = (int) $_GET['wpcf7r-preview'];
+			$nonce = isset( $_GET['_wpnonce'] ) ? sanitize_text_field( wp_unslash( $_GET['_wpnonce'] ) ) : '';
+
+			if ( ! current_user_can( 'wpcf7_edit_contact_form' ) || ! wp_verify_nonce( $nonce, self::PREVIEW_NONCE_ACTION ) ) {
+				wp_die(
+					esc_html__( 'You are not allowed to preview this action.', 'wpcf7-redirect' ),
+					'',
+					array( 'response' => 403 )
+				);
+			}
+
+			$action_id = absint( wp_unslash( $_GET['wpcf7r-preview'] ) );
 
 			$action = WPCF7R_Action::get_action( $action_id );
 
-			$action->dynamic_params['popup-template'] = isset( $_GET['template'] ) ? sanitize_text_field( $_GET['template'] ) : '';
+			$action->dynamic_params['popup-template'] = isset( $_GET['template'] ) ? sanitize_text_field( wp_unslash( $_GET['template'] ) ) : '';
 
 			$action->preview();
 		}

@@ -309,6 +309,33 @@ class WPCF7R_Dashboard {
 	}
 
 	/**
+	 * The "Learn more" links of the Add-ons tab, by docs article slug: the final docs URLs (a redirect would drop
+	 * the UTMs), with the UTMs.
+	 *
+	 * @return array<string, string>
+	 */
+	public function get_addon_docs_links() {
+		$articles = array(
+			'using-contact-form-7-to-api-pardot-integration',
+			'using-conditional-logic-redirect-for-contact-form-7',
+			'using-contact-form-7-thank-you-popup',
+			'how-to-create-pdf-from-form-submissions',
+			'how-to-create-posts-from-contact-form-submissions',
+			'using-contact-form-7-to-mailchimp-integration',
+			'using-salesforce-integration-integrate-contact-form-7-to-salesforces',
+			'hubspot-integration',
+			'using-twilio-addon-integrate-twilio-addon-to-send-sms-with-contact-form',
+		);
+
+		$links = array();
+		foreach ( $articles as $article ) {
+			$links[ $article ] = tsdk_utmify( 'https://docs.themeisle.com/redirection-for-contact-form-7/' . $article, 'addons', 'dashboard' );
+		}
+
+		return $links;
+	}
+
+	/**
 	 * Get data to be localized for the dashboard script.
 	 *
 	 * @return array<string, mixed> Localized data for the dashboard script.
@@ -332,9 +359,10 @@ class WPCF7R_Dashboard {
 			'debugMode'     => get_option( 'wpcf_debug' ),
 			'links'         => array(
 				'upgrade'  => tsdk_utmify( wpcf7_redirect_upgrade_url(), 'dashboard', 'dashboard' ),
-				'docs'     => tsdk_utmify( 'https://docs.themeisle.com/article/2047-redirection-for-contact-form-7-documentation', 'dashboard', 'dashboard' ),
-				'tutorial' => tsdk_utmify( 'https://docs.themeisle.com/category/2230-premium-addons', 'dashboard', 'dashboard' ),
-				'support'  => 'https://wordpress.org/support/plugin/wpcf7-redirect/',
+				'docs'      => tsdk_utmify( 'https://docs.themeisle.com/redirection-for-contact-form-7/redirection-for-contact-form-7-documentation', 'dashboard', 'dashboard' ),
+				'tutorial'  => tsdk_utmify( 'https://docs.themeisle.com/redirection-for-contact-form-7/', 'dashboard', 'dashboard' ),
+				'support'   => 'https://wordpress.org/support/plugin/wpcf7-redirect/',
+				'addonDocs' => $this->get_addon_docs_links(),
 			),
 		);
 
